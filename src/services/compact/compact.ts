@@ -103,7 +103,6 @@ import {
   getMaxOutputTokensForModel,
   queryModelWithStreaming,
 } from '../api/claude.js'
-import { getCompactModel } from '../../utils/model/model.js'
 import {
   getPromptTooLongTokenGap,
   PROMPT_TOO_LONG_ERROR_MESSAGE,
@@ -1315,13 +1314,13 @@ async function streamCompactSummary({
             const appState = context.getAppState()
             return appState.toolPermissionContext
           },
-          model: getCompactModel(context.options.mainLoopModel),
+          model: context.options.mainLoopModel,
           toolChoice: undefined,
           isNonInteractiveSession: context.options.isNonInteractiveSession,
           hasAppendSystemPrompt: !!context.options.appendSystemPrompt,
           maxOutputTokensOverride: Math.min(
             COMPACT_MAX_OUTPUT_TOKENS,
-            getMaxOutputTokensForModel(getCompactModel(context.options.mainLoopModel)),
+            getMaxOutputTokensForModel(context.options.mainLoopModel),
           ),
           querySource: 'compact',
           agents: context.options.agentDefinitions.activeAgents,

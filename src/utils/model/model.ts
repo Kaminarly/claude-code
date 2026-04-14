@@ -47,28 +47,6 @@ export function getSmallFastModel(): ModelName {
   return process.env.ANTHROPIC_SMALL_FAST_MODEL || getDefaultHaikuModel()
 }
 
-/**
- * Get the model to use for compaction, one tier below the current model.
- * Opus → Sonnet, Sonnet → Haiku, Haiku → Haiku (already lowest).
- * Preserves [1m] suffix only if the target family supports it (sonnet/opus).
- */
-export function getCompactModel(model: ModelName): ModelName {
-  const has1m = model.endsWith('[1m]')
-  const baseModel = has1m ? model.slice(0, -4) : model
-  const canonical = getCanonicalName(baseModel)
-
-  // Opus family → Sonnet
-  if (canonical.includes('opus')) {
-    return getDefaultSonnetModel()
-  }
-  // Sonnet family → Haiku
-  if (canonical.includes('sonnet')) {
-    return getDefaultHaikuModel()
-  }
-  // Haiku or unknown → Haiku (lowest tier)
-  return getDefaultHaikuModel()
-}
-
 export function isNonCustomOpusModel(model: ModelName): boolean {
   return (
     model === getModelStrings().opus40 ||
